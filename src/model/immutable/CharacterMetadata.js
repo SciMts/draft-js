@@ -96,15 +96,15 @@ class CharacterMetadata extends CharacterMetadataRecord {
 
     const defaultConfig = {style: EMPTY_SET, entity: (null: ?string)};
     // Fill in unspecified properties, if necessary.
-    var config = Object.assign({}, defaultConfig, config);
-    const key = makeConfigKey(config);
+    var mergedConfig = Object.assign({}, defaultConfig, config);
+    const key = makeConfigKey(mergedConfig);
 
     var existing = pool[key];
     if (existing) {
       return existing;
     }
 
-    var newCharacter = new CharacterMetadata(config);
+    var newCharacter = new CharacterMetadata(mergedConfig);
     pool[key] = newCharacter;
     return newCharacter;
   }
