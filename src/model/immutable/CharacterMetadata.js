@@ -32,6 +32,11 @@ type CharacterMetadataConfig = {
 
 const EMPTY_SET = OrderedSet();
 
+var makeConfigKey = function makeConfigKey(config) {
+  return config.style + config.entity;
+};
+
+
 var defaultRecord: CharacterMetadataConfig = {
   style: EMPTY_SET,
   entity: null,
@@ -89,25 +94,24 @@ class CharacterMetadata extends CharacterMetadataRecord {
       return EMPTY;
     }
 
-    const defaultConfig: CharacterMetadataConfig =
-      {style: EMPTY_SET, entity: (null: ?string)};
-
+    const defaultConfig = {style: EMPTY_SET, entity: (null: ?string)};
     // Fill in unspecified properties, if necessary.
-    var configMap = Map(defaultConfig).merge(config);
+    var config = Object.assign({}, defaultConfig, config);
+    const key = makeConfigKey(config);
 
-    var existing: ?CharacterMetadata = pool.get(configMap);
+    var existing = pool[key];
     if (existing) {
       return existing;
     }
 
-    var newCharacter = new CharacterMetadata(configMap);
-    pool = pool.set(configMap, newCharacter);
+    var newCharacter = new CharacterMetadata(config);
+    pool[key] = newCharacter;
     return newCharacter;
   }
-}
+};
 
 var EMPTY = new CharacterMetadata();
-var pool: Map<Map<any, any>, CharacterMetadata> = Map([[Map(defaultRecord), EMPTY]]);
+var pool = {}
 
 CharacterMetadata.EMPTY = EMPTY;
 
