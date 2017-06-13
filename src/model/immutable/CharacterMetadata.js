@@ -33,7 +33,7 @@ type CharacterMetadataConfig = {
 const EMPTY_SET = OrderedSet();
 
 var makeConfigKey = function makeConfigKey(config) {
-  return config.style + config.entity;
+  return JSON.stringify(config.style.toJS()) + config.entity;
 };
 
 
